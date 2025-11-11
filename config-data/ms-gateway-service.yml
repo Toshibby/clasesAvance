@@ -1,0 +1,51 @@
+server:
+  port: 9095
+
+spring:
+  application:
+    name: ms-gateway-server
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+      routes:
+        - id: ms-auth-service
+          uri: lb://ms-auth-service
+          predicates:
+            - Path=/auth/**
+
+
+        - id: mse-attendance
+          uri: lb://mse-attendance
+          predicates:
+            - Path=/attendances/**
+
+        - id: mse-notification
+          uri: lb://mse-notification
+          predicates:
+            - Path=/notifications/**, /notification-templates/**
+
+        - id: mse-report
+          uri: lb://mse-report
+          predicates:
+            - Path=/reports/**, /report-logs/**
+
+        - id: ms-participants-service
+          uri: lb://ms-participants-service
+          predicates:
+            - Path=/participants/**, /registrations/**
+
+        - id: mse-events-service
+          uri: lb://mse-events-service
+          predicates:
+            - Path=/events/**, /sessions/**
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI:http://localhost:8095/eureka}
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
