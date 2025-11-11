@@ -5,6 +5,8 @@ import { RouterModule } from '@angular/router';
 import { MaterialModule } from 'src/app/material.module';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import {AuthService} from "../../../providers/services/auth/auth.service";
+import {TokenModels} from "../../../models/token-models";
 
 @Component({
   selector: 'app-side-login',
@@ -12,10 +14,11 @@ import { ReactiveFormsModule } from '@angular/forms';
   templateUrl: './side-login.component.html',
 })
 export class AppSideLoginComponent {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService:AuthService) {}
 
+  private  tokenModels = new TokenModels();
   form = new FormGroup({
-    uname: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    userName: new FormControl('', [Validators.required, Validators.minLength(6)]),
     password: new FormControl('', [Validators.required]),
   });
 
@@ -25,5 +28,22 @@ export class AppSideLoginComponent {
 
   submit() {
     this.router.navigate(['']);
+  }
+
+  protected login() {
+    console.log(this.form.value);
+
+    this.authService.add$(this.form.value).subscribe(
+      data => {
+        this.tokenModels=data;
+        this.setToken(this.tokenModels.token);
+        this.router.navigate(['/']);
+        console.log(this.tokenModels.token);
+      }
+    )
+  }
+  private  setToken(token: string | undefined):void{
+    console.log("asdasdssdsdsd",token);
+    this.authService.setToken(token);
   }
 }

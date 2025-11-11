@@ -1,7 +1,7 @@
 // src/app/endpoints.ts
 
 export const END_POINTS = {
-  // auth: 'auth',
+  login: 'auth/login',
   // attendances: 'attendances',
   // notifications: 'notifications',
   // notificationTemplates: 'notification-templates',
