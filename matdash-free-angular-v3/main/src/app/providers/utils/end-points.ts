@@ -2,7 +2,7 @@
 
 export const END_POINTS = {
   login: 'auth/login',
-  // attendances: 'attendances',
+  attendances: 'attendances',
   // notifications: 'notifications',
   // notificationTemplates: 'notification-templates',
   // reports: 'reports',

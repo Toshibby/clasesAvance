@@ -26,12 +26,29 @@ public class AuthUserController {
     @PostMapping("/validate")
     public ResponseEntity<TokenDto> validate(@RequestParam String token) {
         TokenDto tokenDto = authUserService.validate(token);
-        if (tokenDto == null)
+
+        if (tokenDto == null) {
             return ResponseEntity
-                .badRequest()
-                .body(new TokenDto("Token inválido o expirado"));
+                    .badRequest()
+                    .body(TokenDto.builder()
+                            .token(null)
+                            .userName("Token inválido o expirado")
+                            .build()
+                    );
+        }
+
         return ResponseEntity.ok(tokenDto);
     }
+
+    //    @PostMapping("/validate")
+//    public ResponseEntity<TokenDto> validate(@RequestParam String token) {
+//        TokenDto tokenDto = authUserService.validate(token);
+//        if (tokenDto == null)
+//            return ResponseEntity
+//                .badRequest()
+//                .body(new TokenDto("Token inválido o expirado"));
+//        return ResponseEntity.ok(tokenDto);
+//    }
     @GetMapping
     public ResponseEntity<String> test() {
         return ResponseEntity.ok("Auth service activo");

@@ -1,0 +1,34 @@
+<div class="attendance-form">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <mat-form-field appearance="fill">
+      <mat-label>Participante</mat-label>
+      <mat-select formControlName="participantId">
+        <mat-option *ngFor="let p of participants" [value]="p.idParticipant">
+          {{ p.firstName }} {{ p.lastName }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Estado</mat-label>
+      <input matInput formControlName="status">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Método</mat-label>
+      <input matInput formControlName="checkInMethod">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Observaciones</mat-label>
+      <textarea matInput formControlName="observations"></textarea>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit">
+      {{ isEditMode ? 'Actualizar' : 'Registrar' }}
+    </button>
+    <button mat-button color="warn" [routerLink]="['/dashboard/attendance']">Cancelar</button>
+
+  </form>
+</div>

@@ -30,4 +30,10 @@ public class Participant {
 
     @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime registrationDate;
+
+    @PrePersist
+    public void prePersist() {
+        this.registrationDate = LocalDateTime.now();
+    }
+
 }
