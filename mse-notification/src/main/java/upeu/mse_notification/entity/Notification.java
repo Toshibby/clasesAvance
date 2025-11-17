@@ -25,7 +25,7 @@ public class Notification {
     private Long participantId;
 
     // 🔹 Hacer eventId opcional si el evento puede ser temporal
-    @Column(name = "event_id", nullable = true)
+    @Column(name = "event_id", nullable = false)
     private Long eventId;
 
     @Column(nullable = false, length = 150, name = "title")

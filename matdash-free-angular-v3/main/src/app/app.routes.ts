@@ -73,6 +73,27 @@ export const routes: Routes = [
               import('./pages/notification/notification-form/notification-form.component')
                 .then(m => m.NotificationFormComponent),
           },
+
+          // Events
+          {
+            path: 'events',
+            loadComponent: () =>
+              import('./pages/event/event-list/event-list.component')
+                .then(m => m.EventListComponent),
+          },
+          {
+            path: 'events/form',
+            loadComponent: () =>
+              import('./pages/event/event-form/event-form.component')
+                .then(m => m.EventFormComponent),
+          },
+          {
+            path: 'events/form/:id',
+            loadComponent: () =>
+              import('./pages/event/event-form/event-form.component')
+                .then(m => m.EventFormComponent),
+          },
+
         ],
       },
       // Ruta por defecto

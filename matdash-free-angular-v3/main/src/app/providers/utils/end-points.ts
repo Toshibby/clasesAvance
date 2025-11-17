@@ -9,6 +9,6 @@ export const END_POINTS = {
   // reportLogs: 'report-logs',
   participants: 'participants',
   // registrations: 'registrations',
-  // events: 'events',
+  events: 'events',
   // sessions: 'sessions'
 };

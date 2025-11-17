@@ -13,27 +13,23 @@ export class NotificationService {
 
   constructor(private http: HttpClient) {}
 
-  // Listar todas las notificaciones
   getAll(): Observable<Notification[]> {
     return this.http.get<Notification[]>(this.baseUrl);
   }
 
-  // Obtener notificación por ID
   getById(id: number): Observable<Notification> {
     return this.http.get<Notification>(`${this.baseUrl}/${id}`);
   }
 
-  // Crear notificación
-  create(notification: Notification): Observable<Notification> {
-    return this.http.post<Notification>(this.baseUrl, notification);
+  create(notification: any): Observable<any> {
+    return this.http.post<any>(this.baseUrl, notification);
   }
 
-  // Actualizar notificación
-  update(id: number, notification: Notification): Observable<Notification> {
-    return this.http.put<Notification>(`${this.baseUrl}/${id}`, notification);
+
+  updateStatus(id: number, status: string): Observable<Notification> {
+    return this.http.put<Notification>(`${this.baseUrl}/${id}/status`, null, { params: { status } });
   }
 
-  // Eliminar notificación
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
