@@ -36,6 +36,11 @@ spring:
           predicates:
             - Path=/attendances/**
 
+        - id: mse-event
+          uri: lb://mse-event
+          predicates:
+            - Path=/events/**
+
         - id: mse-notification
           uri: lb://mse-notification
           predicates:
