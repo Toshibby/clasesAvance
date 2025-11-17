@@ -1,5 +1,18 @@
 // src/app/models/attendance.model.ts
 
+// 🔹 NUEVO: Enums para status y check-in method
+export enum AttendanceStatus {
+  PRESENT = 'PRESENT',
+  LATE = 'LATE',
+  ABSENT = 'ABSENT',
+}
+
+export enum CheckInMethod {
+  MANUAL = 'MANUAL',
+  QR = 'QR',
+  NFC = 'NFC',
+}
+
 export interface AuthUser {
   id: number;
   userName: string;
@@ -31,8 +44,8 @@ export interface Participant {
 export interface Attendance {
   idAttendance?: number;
   timestamp?: string;  // ISO string
-  status: string;
-  checkInMethod?: string;
+  status: AttendanceStatus;       // 🔹 MODIFICADO (antes era string)
+  checkInMethod?: CheckInMethod;  // 🔹 MODIFICADO (antes era string)
   observations?: string;
 
   authUserDTO: AuthUser;
@@ -45,7 +58,7 @@ export interface AttendanceGroup {
   authUserDTO: AuthUser;
   eventDTO: Event;
   participantDTOs: Participant[];
-  status: string;
-  checkInMethod?: string;
+  status: AttendanceStatus;       // 🔹 MODIFICADO (antes era string)
+  checkInMethod?: CheckInMethod;  // 🔹 MODIFICADO (antes era string)
   observations?: string;
 }

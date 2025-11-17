@@ -10,14 +10,24 @@
       </mat-select>
     </mat-form-field>
 
+    <!-- 🔹 MODIFICADO: input de status por select -->
     <mat-form-field appearance="fill">
       <mat-label>Estado</mat-label>
-      <input matInput formControlName="status">
+      <mat-select formControlName="status">
+        <mat-option *ngFor="let s of statusOptions" [value]="s">
+          {{ s }}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
 
+    <!-- 🔹 MODIFICADO: input de checkInMethod por select -->
     <mat-form-field appearance="fill">
       <mat-label>Método</mat-label>
-      <input matInput formControlName="checkInMethod">
+      <mat-select formControlName="checkInMethod">
+        <mat-option *ngFor="let m of checkInMethodOptions" [value]="m">
+          {{ m }}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="fill">

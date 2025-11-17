@@ -3,8 +3,8 @@
 export const END_POINTS = {
   login: 'auth/login',
   attendances: 'attendances',
-  // notifications: 'notifications',
-  // notificationTemplates: 'notification-templates',
+  notifications: 'notifications',
+  notificationTemplates: 'notification-templates',
   // reports: 'reports',
   // reportLogs: 'report-logs',
   participants: 'participants',

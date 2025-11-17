@@ -1,0 +1,118 @@
+<!-- src/app/pages/notification/notification-form/notification-form.component.html -->
+
+<div class="notification-form">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <!-- Participante -->
+    <mat-form-field appearance="fill">
+      <mat-label>Participante</mat-label>
+      <mat-select formControlName="participantId">
+        <mat-option *ngFor="let p of participants" [value]="p.idParticipant">
+          {{ p.firstName }} {{ p.lastName }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- 🔹 Evento ahora es input para poder escribir -->
+    <mat-form-field appearance="fill">
+      <mat-label>Evento</mat-label>
+      <input matInput formControlName="eventName" placeholder="Escribe el nombre del evento">
+    </mat-form-field>
+
+    <!-- Tipo -->
+    <mat-form-field appearance="fill">
+      <mat-label>Tipo</mat-label>
+      <mat-select formControlName="type">
+        <mat-option *ngFor="let t of typeOptions" [value]="t">{{ t }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Estado -->
+    <mat-form-field appearance="fill">
+      <mat-label>Estado</mat-label>
+      <mat-select formControlName="status">
+        <mat-option *ngFor="let s of statusOptions" [value]="s">{{ s }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Título -->
+    <mat-form-field appearance="fill">
+      <mat-label>Título</mat-label>
+      <input matInput formControlName="title">
+    </mat-form-field>
+
+    <!-- Mensaje -->
+    <mat-form-field appearance="fill">
+      <mat-label>Mensaje</mat-label>
+      <textarea matInput formControlName="message"></textarea>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit">
+      {{ isEditMode ? 'Actualizar' : 'Registrar' }}
+    </button>
+    <button mat-button color="warn" [routerLink]="['/dashboard/notifications']">Cancelar</button>
+
+  </form>
+</div>
+
+
+<!--&lt;!&ndash; src/app/pages/notification/notification-form/notification-form.component.html &ndash;&gt;-->
+
+<!--<div class="notification-form">-->
+<!--  <form [formGroup]="form" (ngSubmit)="submit()">-->
+
+<!--    &lt;!&ndash; Participante &ndash;&gt;-->
+<!--    <mat-form-field appearance="fill">-->
+<!--      <mat-label>Participante</mat-label>-->
+<!--      <mat-select formControlName="participantId">-->
+<!--        <mat-option *ngFor="let p of participants" [value]="p.idParticipant">-->
+<!--          {{ p.firstName }} {{ p.lastName }}-->
+<!--        </mat-option>-->
+<!--      </mat-select>-->
+<!--    </mat-form-field>-->
+
+<!--    &lt;!&ndash; Evento &ndash;&gt;-->
+<!--    <mat-form-field appearance="fill">-->
+<!--      <mat-label>Evento</mat-label>-->
+<!--      <mat-select formControlName="eventId">-->
+<!--        <mat-option *ngFor="let e of events" [value]="e.idEvento">-->
+<!--          {{ e.name }}-->
+<!--        </mat-option>-->
+<!--      </mat-select>-->
+<!--    </mat-form-field>-->
+
+<!--    &lt;!&ndash; Tipo &ndash;&gt;-->
+<!--    <mat-form-field appearance="fill">-->
+<!--      <mat-label>Tipo</mat-label>-->
+<!--      <mat-select formControlName="type">-->
+<!--        <mat-option *ngFor="let t of typeOptions" [value]="t">{{ t }}</mat-option>-->
+<!--      </mat-select>-->
+<!--    </mat-form-field>-->
+
+<!--    &lt;!&ndash; Estado &ndash;&gt;-->
+<!--    <mat-form-field appearance="fill">-->
+<!--      <mat-label>Estado</mat-label>-->
+<!--      <mat-select formControlName="status">-->
+<!--        <mat-option *ngFor="let s of statusOptions" [value]="s">{{ s }}</mat-option>-->
+<!--      </mat-select>-->
+<!--    </mat-form-field>-->
+
+<!--    &lt;!&ndash; Título &ndash;&gt;-->
+<!--    <mat-form-field appearance="fill">-->
+<!--      <mat-label>Título</mat-label>-->
+<!--      <input matInput formControlName="title">-->
+<!--    </mat-form-field>-->
+
+<!--    &lt;!&ndash; Mensaje &ndash;&gt;-->
+<!--    <mat-form-field appearance="fill">-->
+<!--      <mat-label>Mensaje</mat-label>-->
+<!--      <textarea matInput formControlName="message"></textarea>-->
+<!--    </mat-form-field>-->
+
+<!--    <button mat-raised-button color="primary" type="submit">-->
+<!--      {{ isEditMode ? 'Actualizar' : 'Registrar' }}-->
+<!--    </button>-->
+<!--    <button mat-button color="warn" [routerLink]="['/dashboard/notifications']">Cancelar</button>-->
+
+<!--  </form>-->
+<!--</div>-->

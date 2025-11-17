@@ -13,7 +13,7 @@ export const routes: Routes = [
         path: 'dashboard',
         component: StarterComponent,
         children: [
-          
+
 
           // Participantes
           {
@@ -53,6 +53,25 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./pages/attendance/attendance-form/attendance-form.component')
                 .then(m => m.AttendanceFormComponent),
+          },
+
+          {
+            path: 'notifications',
+            loadComponent: () =>
+              import('./pages/notification/notification-list/notification-list.component')
+                .then(m => m.NotificationListComponent),
+          },
+          {
+            path: 'notifications/form',
+            loadComponent: () =>
+              import('./pages/notification/notification-form/notification-form.component')
+                .then(m => m.NotificationFormComponent),
+          },
+          {
+            path: 'notifications/form/:id',
+            loadComponent: () =>
+              import('./pages/notification/notification-form/notification-form.component')
+                .then(m => m.NotificationFormComponent),
           },
         ],
       },

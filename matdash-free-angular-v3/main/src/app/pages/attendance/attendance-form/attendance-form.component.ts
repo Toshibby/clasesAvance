@@ -7,8 +7,8 @@ import { MaterialModule } from '../../../material.module';
 import { AttendanceService } from '../../../providers/services/attendance/attendance.service';
 import { ParticipantService } from '../../../providers/services/participant/participant.service';
 
-import { Attendance } from '../../../models/attendance.model';
-import {Participant} from "../../../models/participant.model";
+import { Attendance, AttendanceStatus, CheckInMethod } from '../../../models/attendance.model';
+import { Participant } from "../../../models/participant.model";
 
 @Component({
   selector: 'app-attendance-form',
@@ -23,26 +23,29 @@ export class AttendanceFormComponent implements OnInit {
   attendanceId?: number;
   isEditMode = false;
 
-  // ✅ NUEVO: lista de participantes para el select
   participants: Participant[] = [];
+
+  // 🔹 NUEVO: Arrays de enums para el select
+  statusOptions = Object.values(AttendanceStatus);       // 🔹 NUEVO
+  checkInMethodOptions = Object.values(CheckInMethod);  // 🔹 NUEVO
 
   constructor(
     private fb: FormBuilder,
     private attendanceService: AttendanceService,
-    private participantService: ParticipantService,  // ✅ NUEVO
+    private participantService: ParticipantService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      participantId: ['', Validators.required], // ✅ NUEVO
+      participantId: ['', Validators.required],
       status: ['', Validators.required],
       checkInMethod: [''],
       observations: [''],
     });
 
-    this.loadParticipants(); // ✅ NUEVO
+    this.loadParticipants();
 
     this.route.params.subscribe(params => {
       if (params['id']) {
@@ -53,7 +56,6 @@ export class AttendanceFormComponent implements OnInit {
     });
   }
 
-  // 🔹 Cargar participantes desde el backend
   loadParticipants(): void {
     this.participantService.getAll().subscribe(data => {
       this.participants = data;
@@ -63,7 +65,7 @@ export class AttendanceFormComponent implements OnInit {
   loadAttendance(id: number): void {
     this.attendanceService.getById(id).subscribe(att => {
       this.form.patchValue({
-        participantId: att.participantDTO.idParticipant, // ✅ NUEVO
+        participantId: att.participantDTO.idParticipant,
         status: att.status,
         checkInMethod: att.checkInMethod,
         observations: att.observations
@@ -82,7 +84,7 @@ export class AttendanceFormComponent implements OnInit {
       ...this.form.value,
       authUserDTO: { id: 1, userName: 'currentUser' },
       eventDTO: { idEvento: 1, name: 'Evento Demo' },
-      participantDTO: selectedParticipant! // 👈 asignación REAL del participante
+      participantDTO: selectedParticipant!
     };
 
     if (this.isEditMode && this.attendanceId) {
@@ -96,3 +98,5 @@ export class AttendanceFormComponent implements OnInit {
     }
   }
 }
+// 🔹 MODIFICACIONES: se agregaron `statusOptions` y `checkInMethodOptions`
+// 🔹 NINGUNA ELIMINACIÓN NECESARIA

@@ -39,8 +39,5 @@ export class AttendanceService {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 
-  // Registrar asistencia de un grupo
-  createGroup(group: AttendanceGroup): Observable<Attendance[]> {
-    return this.http.post<Attendance[]>(`${this.baseUrl}/grupo`, group);
-  }
+
 }
