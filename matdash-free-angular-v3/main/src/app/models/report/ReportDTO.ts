@@ -1,15 +1,15 @@
-import {ReportLogDTO} from "./ReportLogDTO";
-
+import { ReportType, ReportFormat, ReportStatus } from './report.enums';
+import { ReportLogDTO } from './ReportLogDTO';
 
 export interface ReportDTO {
   idReport: number;
   generatedBy: string;
-  type: string;
-  format: string;
-  status: string;
+  type: ReportType;
+  format: ReportFormat;
+  status: ReportStatus;
 
-  createdAt: string;    // LocalDateTime -> string
-  generatedAt: string;  // LocalDateTime -> string
+  createdAt: string;
+  generatedAt: string;
 
   fileUrl: string | null;
 

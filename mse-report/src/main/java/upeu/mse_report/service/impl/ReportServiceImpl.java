@@ -7,6 +7,7 @@ import upeu.mse_report.dto.ReportDTO;
 import upeu.mse_report.dto.ReportUpdateDTO;
 import upeu.mse_report.entity.Report;
 import upeu.mse_report.entity.ReportLog;
+import upeu.mse_report.enums.ReportStatus;
 import upeu.mse_report.mapper.ReportMapper;
 import upeu.mse_report.repository.ReportRepository;
 import upeu.mse_report.service.ReportService;
@@ -22,9 +23,7 @@ public class ReportServiceImpl implements ReportService {
     private final ReportRepository reportRepository;
     private final ReportMapper mapper;
 
-    // ---------------------------------------------------------------------
-    // CREAR REPORTE + LOG AUTOMÁTICO
-    // ---------------------------------------------------------------------
+    // CREAR REPORTE + LOG
     @Override
     public ReportDTO crearReporte(ReportCreateDTO dto) {
 
@@ -32,8 +31,16 @@ public class ReportServiceImpl implements ReportService {
         Report report = mapper.toEntity(dto);
 
         // Status por defecto
-        report.setStatus("IN_PROGRESS");
+        report.setStatus(ReportStatus.IN_PROGRESS);
         report.setCreatedAt(LocalDateTime.now());
+
+        // Procesar fileUrl si viene
+        if (dto.getFileUrl() != null && dto.getFileUrl().contains("docs.google.com/document/d/")) {
+            String docId = dto.getFileUrl().split("/d/")[1].split("/")[0];
+            report.setFileUrl("https://docs.google.com/document/d/" + docId + "/export?format=pdf");
+        } else {
+            report.setFileUrl(dto.getFileUrl());
+        }
 
         // Crear log automático
         ReportLog log = ReportLog.builder()
@@ -54,9 +61,9 @@ public class ReportServiceImpl implements ReportService {
         return mapper.toDTO(saved);
     }
 
-    // ---------------------------------------------------------------------
+
+
     // LISTAR
-    // ---------------------------------------------------------------------
     @Override
     public List<ReportDTO> listarReportes() {
         return reportRepository.findAll()
@@ -65,9 +72,7 @@ public class ReportServiceImpl implements ReportService {
                 .toList();
     }
 
-    // ---------------------------------------------------------------------
     // OBTENER POR ID
-    // ---------------------------------------------------------------------
     @Override
     public ReportDTO obtenerReportePorId(Long idReport) {
         Report report = reportRepository.findById(idReport)
@@ -75,21 +80,23 @@ public class ReportServiceImpl implements ReportService {
         return mapper.toDTO(report);
     }
 
-    // ---------------------------------------------------------------------
-    // ACTUALIZAR REPORTE + LOG AUTOMÁTICO
-    // ---------------------------------------------------------------------
+    // ACTUALIZAR REPORTE + LOG
     @Override
     public ReportDTO actualizarReporte(Long idReport, ReportUpdateDTO dto) {
-
         Report report = reportRepository.findById(idReport)
                 .orElseThrow(() -> new RuntimeException("Reporte no encontrado con ID: " + idReport));
 
         // Actualizar campos desde el DTO
         mapper.updateEntity(report, dto);
 
+        // Si el DTO tiene status, actualizar
+        if (dto.getStatus() != null) {
+            report.setStatus(dto.getStatus());
+        }
+
         // LOG AUTOMÁTICO
         ReportLog log = ReportLog.builder()
-                .message("Reporte actualizado. Nuevo estado: " + dto.getStatus())
+                .message("Reporte actualizado. Nuevo estado: " + report.getStatus())
                 .level("INFO")
                 .timestamp(LocalDateTime.now())
                 .report(report)
@@ -97,15 +104,11 @@ public class ReportServiceImpl implements ReportService {
 
         report.getLogs().add(log);
 
-        // Guardar cambios
         Report saved = reportRepository.save(report);
-
         return mapper.toDTO(saved);
     }
 
-    // ---------------------------------------------------------------------
     // ELIMINAR
-    // ---------------------------------------------------------------------
     @Override
     public void eliminarReporte(Long idReport) {
         if (!reportRepository.existsById(idReport)) {

@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+import upeu.mse_report.enums.ReportFormat;
+import upeu.mse_report.enums.ReportStatus;
+import upeu.mse_report.enums.ReportType;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,17 +29,18 @@ public class Report {
     @Column(name = "generated_by", nullable = false)
     private String generatedBy;
 
-    // Ejemplo de valores posibles: GENERAL, EVENT_SUMMARY, USER_ATTENDANCE
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
-    private String type;
+    private ReportType type;
 
-    // Ejemplo de valores: PDF, CSV, EXCEL
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private String format;
+    private ReportFormat format;
 
-    // Ejemplo de valores: GENERATED, IN_PROGRESS, FAILED
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private String status;
+    private ReportStatus status;
+
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();

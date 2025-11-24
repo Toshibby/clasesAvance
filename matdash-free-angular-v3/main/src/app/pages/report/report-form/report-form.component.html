@@ -11,20 +11,27 @@
 
     <mat-form-field appearance="fill" class="w-full mb-4">
       <mat-label>Tipo</mat-label>
-      <input matInput formControlName="type" />
+      <mat-select formControlName="type">
+        <mat-option *ngFor="let t of reportTypes" [value]="t">{{ t }}</mat-option>
+      </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="w-full mb-4">
       <mat-label>Formato</mat-label>
-      <input matInput formControlName="format" />
+      <mat-select formControlName="format">
+        <mat-option *ngFor="let f of reportFormats" [value]="f">{{ f }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-full mb-4">
+      <mat-label>File URL</mat-label>
+      <input matInput formControlName="fileUrl" />
     </mat-form-field>
 
     <mat-form-field *ngIf="isEdit" appearance="fill" class="w-full mb-4">
       <mat-label>Estado</mat-label>
       <mat-select formControlName="status">
-        <mat-option value="GENERATED">GENERADO</mat-option>
-        <mat-option value="IN_PROGRESS">EN PROGRESO</mat-option>
-        <mat-option value="FAILED">FALLIDO</mat-option>
+        <mat-option *ngFor="let s of reportStatuses" [value]="s">{{ s }}</mat-option>
       </mat-select>
     </mat-form-field>
 

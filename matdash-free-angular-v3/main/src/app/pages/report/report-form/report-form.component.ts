@@ -12,6 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { ReportService } from '../../../providers/services/report/report.service';
 import { ReportUpdateDTO } from '../../../models/report/ReportUpdateDTO';
 import { ReportCreateDTO } from '../../../models/report/ReportCreateDTO';
+import { ReportType, ReportFormat, ReportStatus } from '../../../models/report/report.enums';
 
 @Component({
   selector: 'app-report-form',
@@ -32,6 +33,10 @@ export class ReportFormComponent implements OnInit {
   isEdit = false;
   reportId!: number;
 
+  reportTypes: ReportType[] = ['GENERAL', 'EVENT_SUMMARY', 'USER_ATTENDANCE'];
+  reportFormats: ReportFormat[] = ['PDF', 'CSV', 'EXCEL'];
+  reportStatuses: ReportStatus[] = ['GENERATED', 'IN_PROGRESS', 'FAILED'];
+
   constructor(
     private fb: FormBuilder,
     private reportService: ReportService,
@@ -42,7 +47,8 @@ export class ReportFormComponent implements OnInit {
       generatedBy: ['', Validators.required],
       type: ['', Validators.required],
       format: ['', Validators.required],
-      status: ['IN_PROGRESS'] // default
+      fileUrl: ['', Validators.required],
+      status: ['IN_PROGRESS', Validators.required] // default
     });
   }
 
@@ -56,6 +62,7 @@ export class ReportFormComponent implements OnInit {
             generatedBy: report.generatedBy,
             type: report.type,
             format: report.format,
+            fileUrl: report.fileUrl ?? '',
             status: report.status
           });
         });
@@ -67,9 +74,13 @@ export class ReportFormComponent implements OnInit {
     if (this.reportForm.invalid) return;
 
     if (this.isEdit) {
+      // Enviar todos los campos editables al backend
       const dto: ReportUpdateDTO = {
+        generatedBy: this.reportForm.value.generatedBy,
+        type: this.reportForm.value.type,
+        format: this.reportForm.value.format,
         status: this.reportForm.value.status,
-        fileUrl: null
+        fileUrl: this.reportForm.value.fileUrl
       };
       this.reportService.update(this.reportId, dto).subscribe(() => {
         this.router.navigate(['/reports']);
