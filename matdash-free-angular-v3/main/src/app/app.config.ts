@@ -43,10 +43,11 @@ export const appConfig: ApplicationConfig = {
     ),
     provideHttpClient(withInterceptorsFromDi(),
       withInterceptors([
-        urlInterceptor,
-        tokenInterceptor,
-        errorInterceptor
+        urlInterceptor,      // 1. Primero modifica la URL
+        tokenInterceptor,    // 2. Luego agrega el token
+        errorInterceptor     // 3. Finalmente maneja errores
       ])
+
     ),
     provideClientHydration(),
     provideAnimationsAsync(),

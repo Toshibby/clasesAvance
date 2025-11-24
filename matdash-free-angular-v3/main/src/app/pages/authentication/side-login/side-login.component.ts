@@ -1,12 +1,9 @@
-import { Component } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { RouterModule } from '@angular/router';
-import { MaterialModule } from 'src/app/material.module';
-import { FormsModule } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { AuthService } from "../../../providers/services/auth/auth.service";
-import { TokenModels } from "../../../models/token-models";
+import {Component} from '@angular/core';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Router, RouterModule} from '@angular/router';
+import {MaterialModule} from 'src/app/material.module';
+import {AuthService} from "../../../providers/services/auth/auth.service";
+import {TokenModels} from "../../../models/token-models";
 
 @Component({
   selector: 'app-side-login',
@@ -14,13 +11,12 @@ import { TokenModels } from "../../../models/token-models";
   templateUrl: './side-login.component.html',
 })
 export class AppSideLoginComponent {
-
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService) {
+  }
 
   private tokenModels = new TokenModels();
-
   form = new FormGroup({
-    userName: new FormControl('', [Validators.required, Validators.minLength(3)]),
+    userName: new FormControl('', [Validators.required, Validators.minLength(6)]),
     password: new FormControl('', [Validators.required]),
   });
 
@@ -28,24 +24,23 @@ export class AppSideLoginComponent {
     return this.form.controls;
   }
 
+  submit() {
+    this.router.navigate(['']);
+  }
+
   protected login() {
     console.log(this.form.value);
-
     this.authService.add$(this.form.value).subscribe(
       data => {
         this.tokenModels = data;
-
-        // 🔥 CAMBIO → Guardamos token + userName
-        this.authService.setToken(
-          this.tokenModels.token,
-          this.tokenModels.userName
-        );
-
-        console.log("TOKEN:", this.tokenModels.token);
-        console.log("USER:", this.tokenModels.userName); // 🔥 NUEVO
-
-        this.router.navigate(['/']);        // redirecciona al dashboard
+        this.setToken(this.tokenModels.token);
+        this.router.navigate(['/']);
+        console.log(this.tokenModels.token);
       }
-    );
+    )
+  }
+  private setToken(token: string | undefined):void {
+    console.log("====================; ",token);
+    this.authService.setToken(token);
   }
 }

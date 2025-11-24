@@ -12,7 +12,7 @@
     }" class="menu-list-item">
     <span class="iconify routeIcon" matListItemIcon [attr.data-icon]="item.iconName"></span>
     <span class="hide-menu">{{ item.displayName }}</span>
-
+    
     @if(item.children && item.children.length) {
     <span class="arrow-icon" fxFlex>
       <span fxFlex></span>
@@ -42,7 +42,7 @@
     }
   </mat-list-item>
   }
-
+  
   <!-- children -->
   @if(expanded) { @for(child of item.children; track child) {
   <app-nav-item [item]="child" (click)="onSubItemSelected(child)" [depth]="depth + 1">

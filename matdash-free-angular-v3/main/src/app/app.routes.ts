@@ -1,103 +1,34 @@
 import { Routes } from '@angular/router';
 import { BlankComponent } from './layouts/blank/blank.component';
 import { FullComponent } from './layouts/full/full.component';
-import { StarterComponent } from './pages/starter/starter.component';
 
 export const routes: Routes = [
   {
     path: '',
     component: FullComponent,
     children: [
-      // Dashboard con rutas hijas
+      {
+        path: '',
+        redirectTo: '/dashboard',
+        pathMatch: 'full',
+      },
       {
         path: 'dashboard',
-        component: StarterComponent,
-        children: [
-
-
-          // Participantes
-          {
-            path: 'participants',
-            loadComponent: () =>
-              import('./pages/participant/participant-list/participant-list.component')
-                .then(m => m.ParticipantListComponent),
-          },
-          {
-            path: 'participants/form',
-            loadComponent: () =>
-              import('./pages/participant/participant-form/participant-form.component')
-                .then(m => m.ParticipantFormComponent),
-          },
-          {
-            path: 'participants/form/:id',
-            loadComponent: () =>
-              import('./pages/participant/participant-form/participant-form.component')
-                .then(m => m.ParticipantFormComponent),
-          },
-
-          // Attendance
-          {
-            path: 'attendance',
-            loadComponent: () =>
-              import('./pages/attendance/attendance-list/attendance-list.component')
-                .then(m => m.AttendanceListComponent),
-          },
-          {
-            path: 'attendance/form',
-            loadComponent: () =>
-              import('./pages/attendance/attendance-form/attendance-form.component')
-                .then(m => m.AttendanceFormComponent),
-          },
-          {
-            path: 'attendance/form/:id',
-            loadComponent: () =>
-              import('./pages/attendance/attendance-form/attendance-form.component')
-                .then(m => m.AttendanceFormComponent),
-          },
-
-          {
-            path: 'notifications',
-            loadComponent: () =>
-              import('./pages/notification/notification-list/notification-list.component')
-                .then(m => m.NotificationListComponent),
-          },
-          {
-            path: 'notifications/form',
-            loadComponent: () =>
-              import('./pages/notification/notification-form/notification-form.component')
-                .then(m => m.NotificationFormComponent),
-          },
-          {
-            path: 'notifications/form/:id',
-            loadComponent: () =>
-              import('./pages/notification/notification-form/notification-form.component')
-                .then(m => m.NotificationFormComponent),
-          },
-
-          // Events
-          {
-            path: 'events',
-            loadComponent: () =>
-              import('./pages/event/event-list/event-list.component')
-                .then(m => m.EventListComponent),
-          },
-          {
-            path: 'events/form',
-            loadComponent: () =>
-              import('./pages/event/event-form/event-form.component')
-                .then(m => m.EventFormComponent),
-          },
-          {
-            path: 'events/form/:id',
-            loadComponent: () =>
-              import('./pages/event/event-form/event-form.component')
-                .then(m => m.EventFormComponent),
-          },
-
-        ],
+        loadChildren: () =>
+          import('./pages/pages.routes').then((m) => m.PagesRoutes),
       },
-      // Ruta por defecto
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: 'ui-components',
+        loadChildren: () =>
+          import('./pages/ui-components/ui-components.routes').then(
+            (m) => m.UiComponentsRoutes
+          ),
+      },
+      {
+        path: 'extra',
+        loadChildren: () =>
+          import('./pages/extra/extra.routes').then((m) => m.ExtraRoutes),
+      },
     ],
   },
   {
@@ -108,90 +39,24 @@ export const routes: Routes = [
         path: 'authentication',
         loadChildren: () =>
           import('./pages/authentication/authentication.routes').then(
-            m => m.AuthenticationRoutes
+            (m) => m.AuthenticationRoutes
           ),
       },
     ],
   },
-  { path: '**', redirectTo: 'authentication/error' },
+  {
+    path: '**',
+    redirectTo: 'authentication/error',
+  },
+  {
+    path: 'participants',
+    loadChildren: () =>
+      import('./pages/participant/participants.module')
+        .then(m => m.ParticipantsModule)
+  },
+  {
+    path: 'events',
+    loadChildren: () =>
+      import('./pages/events/EventsModule').then(m => m.EventsModule)
+  }
 ];
-
-
-// import { Routes } from '@angular/router';
-// import { BlankComponent } from './layouts/blank/blank.component';
-// import { FullComponent } from './layouts/full/full.component';
-// import { StarterComponent } from './pages/starter/starter.component';
-//
-// export const routes: Routes = [
-//   {
-//     path: '',
-//     component: FullComponent,
-//     children: [
-//       // Ruta por defecto al dashboard
-//       {
-//         path: '',
-//         redirectTo: 'dashboard',
-//         pathMatch: 'full',
-//       },
-//       // Dashboard
-//       {
-//         path: 'dashboard',
-//         component: StarterComponent, // solo el StarterComponent
-//       },
-//       // Microservicio: participantes
-//       {
-//         path: 'participants',
-//         loadComponent: () =>
-//           import('./pages/participant/participant-list/participant-list.component')
-//             .then(m => m.ParticipantListComponent),
-//       },
-//       {
-//         path: 'participants/form',
-//         loadComponent: () =>
-//           import('./pages/participant/participant-form/participant-form.component')
-//             .then(m => m.ParticipantFormComponent),
-//       },
-//       {
-//         path: 'participants/form/:id',
-//         loadComponent: () =>
-//           import('./pages/participant/participant-form/participant-form.component')
-//             .then(m => m.ParticipantFormComponent),
-//       },
-//       {
-//         path: 'attendance',
-//         loadComponent: () =>
-//           import('./pages/attendance/attendance-list/attendance-list.component')
-//             .then(m => m.AttendanceListComponent),
-//       },
-//       {
-//         path: 'attendance/form',
-//         loadComponent: () =>
-//           import('./pages/attendance/attendance-form/attendance-form.component')
-//             .then(m => m.AttendanceFormComponent),
-//       },
-//       {
-//         path: 'attendance/form/:id',
-//         loadComponent: () =>
-//           import('./pages/attendance/attendance-form/attendance-form.component')
-//             .then(m => m.AttendanceFormComponent),
-//       },
-//     ],
-//   },
-//   {
-//     path: '',
-//     component: BlankComponent,
-//     children: [
-//       {
-//         path: 'authentication',
-//         loadChildren: () =>
-//           import('./pages/authentication/authentication.routes').then(
-//             (m) => m.AuthenticationRoutes
-//           ),
-//       },
-//     ],
-//   },
-//   {
-//     path: '**',
-//     redirectTo: 'authentication/error',
-//   },
-// ];

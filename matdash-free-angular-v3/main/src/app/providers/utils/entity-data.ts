@@ -1,9 +1,8 @@
-
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export class EntityDataService<T> {
 
+export class EntityDataService<T> {
   constructor(
     protected httpClient: HttpClient,
     protected endPoint: string,

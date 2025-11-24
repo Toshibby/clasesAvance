@@ -1,42 +1,106 @@
-// src/app/providers/services/event/event.service.ts
-
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Event } from '../../../models/event.model';
-import { environment } from '../../../../enviroments/enviroment';
+
+
+import {environment} from "../../../../environments/environment";
+import {EventCreateDTO} from "../../../models/events/EventCreateDTO";
+import {EventResponseDTO} from "../../../models/events/EventResponseDTO";
+import {EventUpdateDTO} from "../../../models/events/EventUpdateDTO";
+import {PageResponse} from "../../../models/events/PageResponseDTO";
+import {EventStatus} from "../../../models/events/EventStatus";
+import {EventModality} from "../../../models/events/EventModality";
+import {EventSummaryDTO} from "../../../models/events/EventSummaryDTO";
 
 @Injectable({
   providedIn: 'root'
 })
 export class EventService {
-
-  private baseUrl = `${environment.url}events`; // Coincide con @RequestMapping("/events")
+  private apiUrl = `${environment.url}events`;
 
   constructor(private http: HttpClient) {}
 
-  // 🔹 Obtener todos los eventos
-  getAll(): Observable<Event[]> {
-    return this.http.get<Event[]>(this.baseUrl);
+  createEvent(event: EventCreateDTO): Observable<EventResponseDTO> {
+    return this.http.post<EventResponseDTO>(this.apiUrl, event);
   }
 
-  // 🔹 Obtener un evento por ID
-  getById(id: number): Observable<Event> {
-    return this.http.get<Event>(`${this.baseUrl}/${id}`);
+  updateEvent(eventId: number, event: EventUpdateDTO, organizerId: number): Observable<EventResponseDTO> {
+    const headers = new HttpHeaders().set('X-Organizer-Id', organizerId.toString());
+    return this.http.put<EventResponseDTO>(`${this.apiUrl}/${eventId}`, event, { headers });
   }
 
-  // 🔹 Crear un nuevo evento
-  create(event: Event): Observable<Event> {
-    return this.http.post<Event>(this.baseUrl, event);
+  getEventById(eventId: number): Observable<EventResponseDTO> {
+    return this.http.get<EventResponseDTO>(`${this.apiUrl}/${eventId}`);
   }
 
-  // 🔹 Actualizar un evento existente
-  update(id: number, event: Event): Observable<Event> {
-    return this.http.put<Event>(`${this.baseUrl}/${id}`, event);
+  getEventByIdWithOrganizer(eventId: number): Observable<EventResponseDTO> {
+    return this.http.get<EventResponseDTO>(`${this.apiUrl}/${eventId}/with-organizer`);
   }
 
-  // 🔹 Eliminar evento
-  delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  getAllEvents(page: number = 0, size: number = 10, sortBy: string = 'eventId', sortDirection: string = 'DESC'): Observable<PageResponse<EventResponseDTO>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sortBy', sortBy)
+      .set('sortDirection', sortDirection);
+
+    return this.http.get<PageResponse<EventResponseDTO>>(this.apiUrl, { params });
+  }
+
+  getEventsByStatus(status: EventStatus, page: number = 0, size: number = 10): Observable<PageResponse<EventResponseDTO>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    return this.http.get<PageResponse<EventResponseDTO>>(`${this.apiUrl}/status/${status}`, { params });
+  }
+
+  getEventsByOrganizerId(organizerId: number): Observable<EventResponseDTO[]> {
+    return this.http.get<EventResponseDTO[]>(`${this.apiUrl}/organizer/${organizerId}`);
+  }
+
+  getEventsByOrganizerIdAndStatus(organizerId: number, status: EventStatus, page: number = 0, size: number = 10): Observable<PageResponse<EventResponseDTO>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    return this.http.get<PageResponse<EventResponseDTO>>(`${this.apiUrl}/organizer/${organizerId}/status/${status}`, { params });
+  }
+
+  getEventsByModality(modality: EventModality): Observable<EventSummaryDTO[]> {
+    return this.http.get<EventSummaryDTO[]>(`${this.apiUrl}/modality/${modality}`);
+  }
+
+  getEventsBetweenDates(startDate: string, endDate: string): Observable<EventSummaryDTO[]> {
+    const params = new HttpParams()
+      .set('startDate', startDate)
+      .set('endDate', endDate);
+
+    return this.http.get<EventSummaryDTO[]>(`${this.apiUrl}/between-dates`, { params });
+  }
+
+  getUpcomingEvents(page: number = 0, size: number = 10): Observable<PageResponse<EventSummaryDTO>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    return this.http.get<PageResponse<EventSummaryDTO>>(`${this.apiUrl}/upcoming`, { params });
+  }
+
+  deleteEvent(eventId: number, organizerId: number): Observable<void> {
+    const headers = new HttpHeaders().set('X-Organizer-Id', organizerId.toString());
+    return this.http.delete<void>(`${this.apiUrl}/${eventId}`, { headers });
+  }
+
+  changeEventStatus(eventId: number, status: EventStatus, organizerId: number): Observable<EventResponseDTO> {
+    const headers = new HttpHeaders().set('X-Organizer-Id', organizerId.toString());
+    const params = new HttpParams().set('status', status);
+
+    return this.http.patch<EventResponseDTO>(`${this.apiUrl}/${eventId}/status`, null, { headers, params });
+  }
+
+  isOrganizerOwner(eventId: number, organizerId: number): Observable<boolean> {
+    const params = new HttpParams().set('organizerId', organizerId.toString());
+    return this.http.get<boolean>(`${this.apiUrl}/${eventId}/is-owner`, { params });
   }
 }

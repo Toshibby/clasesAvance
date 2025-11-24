@@ -42,33 +42,16 @@ public class AuthUserServiceImpl implements AuthUserService {
 
 
 
+
     @Override
     public TokenDto login(AuthUserDto authUserDto) {
         Optional<AuthUser> user = authUserRepository.findByUserName(authUserDto.getUserName());
         if (!user.isPresent())
             return null;
-
-        if (!passwordEncoder.matches(authUserDto.getPassword(), user.get().getPassword()))
-            return null;
-
-        String token = jwtProvider.createToken(user.get());
-
-        return TokenDto.builder()
-                .token(token)
-                .userName(user.get().getUserName()) // 👈 AQUI
-                .build();
+        if (passwordEncoder.matches(authUserDto.getPassword(), user.get().getPassword()))
+            return new TokenDto(jwtProvider.createToken(user.get()));
+        return null;
     }
-
-
-//    @Override
-//    public TokenDto login(AuthUserDto authUserDto) {
-//        Optional<AuthUser> user = authUserRepository.findByUserName(authUserDto.getUserName());
-//        if (!user.isPresent())
-//            return null;
-//        if (passwordEncoder.matches(authUserDto.getPassword(), user.get().getPassword()))
-//            return new TokenDto(jwtProvider.createToken(user.get()));
-//        return null;
-//    }
 
 
 
@@ -77,31 +60,17 @@ public class AuthUserServiceImpl implements AuthUserService {
     public TokenDto validate(String token) {
         if (!jwtProvider.validate(token))
             return null;
-
         String username = jwtProvider.getUserNameFromToken(token);
-
-        Optional<AuthUser> userOpt = authUserRepository.findByUserName(username);
-        if (userOpt.isEmpty())
+        if (!authUserRepository.findByUserName(username).isPresent())
             return null;
-
-        return TokenDto.builder()
-                .token(token)
-                .userName(username)  // 👈 AQUI
-                .build();
+        return new TokenDto(token);
     }
-
-//    @Override
-//    public TokenDto validate(String token) {
-//        if (!jwtProvider.validate(token))
-//            return null;
-//        String username = jwtProvider.getUserNameFromToken(token);
-//        if (!authUserRepository.findByUserName(username).isPresent())
-//            return null;
-//        return new TokenDto(token);
-//    }
-
     @Override
-    public AuthUserDto findById(int id) {
+    public boolean existsById(Long id) {
+        return authUserRepository.existsById(id);
+    }
+    @Override
+    public AuthUserDto findById(Long id) {
         Optional<AuthUser> userOpt = authUserRepository.findById(id);
         if (userOpt.isEmpty()) return null;
 

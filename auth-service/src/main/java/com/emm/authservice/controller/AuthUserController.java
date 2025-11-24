@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequestMapping("/auth")
 public class AuthUserController {
@@ -26,29 +27,12 @@ public class AuthUserController {
     @PostMapping("/validate")
     public ResponseEntity<TokenDto> validate(@RequestParam String token) {
         TokenDto tokenDto = authUserService.validate(token);
-
-        if (tokenDto == null) {
+        if (tokenDto == null)
             return ResponseEntity
                     .badRequest()
-                    .body(TokenDto.builder()
-                            .token(null)
-                            .userName("Token inválido o expirado")
-                            .build()
-                    );
-        }
-
+                    .body(new TokenDto("Token inválido o expirado"));
         return ResponseEntity.ok(tokenDto);
     }
-
-    //    @PostMapping("/validate")
-//    public ResponseEntity<TokenDto> validate(@RequestParam String token) {
-//        TokenDto tokenDto = authUserService.validate(token);
-//        if (tokenDto == null)
-//            return ResponseEntity
-//                .badRequest()
-//                .body(new TokenDto("Token inválido o expirado"));
-//        return ResponseEntity.ok(tokenDto);
-//    }
     @GetMapping
     public ResponseEntity<String> test() {
         return ResponseEntity.ok("Auth service activo");
@@ -62,9 +46,13 @@ public class AuthUserController {
         return ResponseEntity.ok(authUser);
     }
 
-
+    @GetMapping("/{id}/exists")
+    public ResponseEntity<Boolean> existsById(@PathVariable Long id) {
+        boolean exists = authUserService.existsById(id);
+        return ResponseEntity.ok(exists);
+    }
     @GetMapping("/{id}")
-    public ResponseEntity<AuthUserDto> getUserById(@PathVariable int id) {
+    public ResponseEntity<AuthUserDto> getUserById(@PathVariable Long id) {
         AuthUserDto user = authUserService.findById(id);
         if (user == null) {
             return ResponseEntity.notFound().build();
