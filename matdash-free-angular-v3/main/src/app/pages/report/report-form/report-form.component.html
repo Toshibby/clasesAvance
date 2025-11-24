@@ -1,0 +1,38 @@
+<div class="p-4 max-w-lg mx-auto">
+  <h2 class="text-xl font-bold mb-4">
+    {{ isEdit ? 'Editar Reporte' : 'Crear Reporte' }}
+  </h2>
+
+  <form [formGroup]="reportForm" (ngSubmit)="saveReport()">
+    <mat-form-field appearance="fill" class="w-full mb-4">
+      <mat-label>Generado Por</mat-label>
+      <input matInput formControlName="generatedBy" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-full mb-4">
+      <mat-label>Tipo</mat-label>
+      <input matInput formControlName="type" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-full mb-4">
+      <mat-label>Formato</mat-label>
+      <input matInput formControlName="format" />
+    </mat-form-field>
+
+    <mat-form-field *ngIf="isEdit" appearance="fill" class="w-full mb-4">
+      <mat-label>Estado</mat-label>
+      <mat-select formControlName="status">
+        <mat-option value="GENERATED">GENERADO</mat-option>
+        <mat-option value="IN_PROGRESS">EN PROGRESO</mat-option>
+        <mat-option value="FAILED">FALLIDO</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="flex justify-between mt-4">
+      <button mat-raised-button color="primary" type="submit">
+        {{ isEdit ? 'Actualizar' : 'Crear' }}
+      </button>
+      <button mat-raised-button color="accent" type="button" (click)="cancel()">Cancelar</button>
+    </div>
+  </form>
+</div>

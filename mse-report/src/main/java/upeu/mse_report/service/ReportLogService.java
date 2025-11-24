@@ -1,19 +1,19 @@
 package upeu.mse_report.service;
 
-import upeu.mse_report.entity.ReportLog;
+import upeu.mse_report.dto.ReportLogCreateDTO;
+import upeu.mse_report.dto.ReportLogDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ReportLogService {
 
-    ReportLog crearLog(ReportLog reportLog);
+    ReportLogDTO crearLog(Long reportId, ReportLogCreateDTO dto);
 
-    List<ReportLog> listarLogs();
+    List<ReportLogDTO> listarLogs();
 
-    List<ReportLog> listarLogsPorReporte(Long idReport);
+    List<ReportLogDTO> listarLogsPorReporte(Long idReport);
 
-    Optional<ReportLog> obtenerLogPorId(Long idReportLog);
+    ReportLogDTO obtenerLogPorId(Long idReportLog);
 
     void eliminarLog(Long idReportLog);
 }

@@ -1,60 +1,50 @@
 package upeu.mse_report.controller;
 
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import upeu.mse_report.dto.ReportCreateDTO;
+import upeu.mse_report.dto.ReportDTO;
+import upeu.mse_report.dto.ReportUpdateDTO;
 import upeu.mse_report.entity.Report;
 import upeu.mse_report.service.ReportService;
 
 import java.util.List;
-
 @RestController
 @RequestMapping("/reports")
+@RequiredArgsConstructor
 public class ReportController {
 
     private final ReportService reportService;
 
-    public ReportController(ReportService reportService) {
-        this.reportService = reportService;
+    @PostMapping
+    public ResponseEntity<ReportDTO> crearReporte(@Valid @RequestBody ReportCreateDTO dto) {
+        ReportDTO created = reportService.crearReporte(dto);
+        return ResponseEntity.ok(created);
     }
 
     @GetMapping
-    public ResponseEntity<List<Report>> listarReportes() {
-        List<Report> reportes = reportService.listarReportes();
-        return ResponseEntity.ok(reportes);
+    public ResponseEntity<List<ReportDTO>> listarReportes() {
+        return ResponseEntity.ok(reportService.listarReportes());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Report> obtenerReporte(@PathVariable Long idReport) {
-        return reportService.obtenerReportePorId(idReport)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @PostMapping
-    public ResponseEntity<Report> crearReporte(@RequestBody Report report) {
-        Report guardado = reportService.crearReporte(report);
-        return ResponseEntity.ok(guardado);
+    public ResponseEntity<ReportDTO> obtenerReporte(@PathVariable Long id) {
+        return ResponseEntity.ok(reportService.obtenerReportePorId(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Report> actualizarReporte(
+    public ResponseEntity<ReportDTO> actualizarReporte(
             @PathVariable Long id,
-            @RequestBody Report report) {
-        try {
-            Report actualizado = reportService.actualizarReporte(id, report);
-            return ResponseEntity.ok(actualizado);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+            @RequestBody ReportUpdateDTO dto) {
+
+        return ResponseEntity.ok(reportService.actualizarReporte(id, dto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarReporte(@PathVariable Long id) {
-        try {
-            reportService.eliminarReporte(id);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        reportService.eliminarReporte(id);
+        return ResponseEntity.noContent().build();
     }
 }

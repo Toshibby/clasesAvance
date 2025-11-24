@@ -29,6 +29,11 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./pages/extra/extra.routes').then((m) => m.ExtraRoutes),
       },
+      {
+        path: 'reports',
+        loadChildren: () =>
+          import('./pages/report/report.routes').then(m => m.ReportsRoutes)
+      }
     ],
   },
   {
@@ -58,5 +63,7 @@ export const routes: Routes = [
     path: 'events',
     loadChildren: () =>
       import('./pages/events/EventsModule').then(m => m.EventsModule)
-  }
+  },
+
+
 ];
